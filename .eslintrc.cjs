@@ -71,6 +71,12 @@ module.exports = {
         "plugin:import/recommended",
         "plugin:import/typescript",
       ],
+      rules: {
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": ["warn"],
+        "@typescript-eslint/no-explicit-any": ["off"],
+        "react/prop-types": [1, { skipUndeclared: true }],
+      },
     },
 
     // Node

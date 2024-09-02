@@ -48,4 +48,3 @@ export const Icon = ({
     </svg>
   );
 };
-export { IconName };
