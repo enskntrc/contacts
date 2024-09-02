@@ -6,6 +6,9 @@ export const passwords = sqliteTable("passwords", {
   // attributes
   id: text("id").primaryKey().notNull(),
   hash: text("hash").notNull(),
+  status: text("status", {
+    enum: ["DELETED", "ACTIVE", "PASSIVE"],
+  }).notNull(),
   // relations
   user_id: text("user_id")
     .notNull()
@@ -18,4 +21,6 @@ export const passwords = sqliteTable("passwords", {
   deleted_at: integer("deleted_at", { mode: "timestamp" }),
 });
 
-export type Password = InferSelectModel<typeof passwords>;
+export type DB_Password = InferSelectModel<typeof passwords>;
+
+export type PasswordStatus = DB_Password["status"];

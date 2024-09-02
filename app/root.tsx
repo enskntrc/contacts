@@ -52,7 +52,7 @@ export function RootLayout({
       </head>
       <body>
         {children}
-        <Toaster />
+        <Toaster richColors />
         <ScrollRestoration />
         <Scripts />
       </body>

@@ -1,9 +1,9 @@
 import React from "react";
-// import { redirectWithError, redirectWithSuccess } from "remix-toast";
-// import {
-//   ActionFunctionArgs,
-//   LoaderFunctionArgs,
-// } from "@remix-run/node";
+import { redirectWithError, redirectWithSuccess } from "remix-toast";
+import {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+} from "@remix-run/node";
 import {
   Outlet,
   isRouteErrorResponse,
@@ -16,25 +16,17 @@ import { NavSidebar } from "~/components/types/contacts";
 import { DynamicSidebar } from "~/components/layouts/contacts/dynamic-sidebar";
 import { StaticSideBar } from "~/components/layouts/contacts/static-sidebar";
 import { Header } from "~/components/layouts/contacts/header";
+import { getUserFromSession } from "~/lib/actions/auth/read.server";
 
-// export const loader = async ({ request }: LoaderFunctionArgs) => {
-//   const responseGetUserFromSession: ResponseGetUserFromSession =
-//     await getUserFromSession(request);
-//   const userLoggedIn = responseGetUserFromSession.successData;
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const response = await getUserFromSession(request);
 
-//   if (!userLoggedIn) {
-//     return redirectWithError("/login", "Lütfen giriş yapın.");
-//   } else if (
-//     ["ADMIN", "MANAGER", "WAITER"].indexOf(userLoggedIn.role) === -1
-//   ) {
-//     return redirectWithError(
-//       "/",
-//       "Bu sayfaya erişim izniniz bulunmamaktadır."
-//     );
-//   } else {
-//     return userLoggedIn;
-//   }
-// };
+  if (!response.successData) {
+    return redirectWithError("/auth", "Please first login.");
+  } else {
+    return response;
+  }
+};
 
 const navOverview: NavSidebar[] = [
   {

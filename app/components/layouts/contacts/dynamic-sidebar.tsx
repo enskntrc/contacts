@@ -4,7 +4,7 @@ import {
   DialogPanel,
   TransitionChild,
 } from "@headlessui/react";
-import { NavLink } from "@remix-run/react";
+import { Link, NavLink } from "@remix-run/react";
 import { Icon } from "~/components/icons";
 import type { DynamicSidebarProps } from "~/components/types/contacts";
 import { cn } from "~/lib/utils";
@@ -49,13 +49,16 @@ export function DynamicSidebar({
           </TransitionChild>
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-4">
-            <div className="flex h-16 shrink-0 items-center">
+            <Link to="/" className="flex h-16 shrink-0 items-center">
               <img
                 alt="Your Company"
-                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                src="contacts.png"
                 className="h-8 w-auto"
               />
-            </div>
+              <h1 className="ml-4 text-2xl font-semibold text-gray-500">
+                Contacts
+              </h1>
+            </Link>
             <nav className="flex flex-1 flex-col">
               <ul
                 // role="list"
@@ -80,6 +83,7 @@ export function DynamicSidebar({
                               "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
                             )
                           }
+                          onClick={() => setSidebarOpen(false)}
                         >
                           <Icon
                             name={item.icon}
@@ -100,7 +104,7 @@ export function DynamicSidebar({
                   </div>
                   <ul
                     //   role="list"
-                    className="-mx-2 mt-2 space-y-1"
+                    className="-mx-2 mt-6 space-y-1"
                   >
                     {navManage.map((item) => (
                       <li key={item.name}>
@@ -116,6 +120,7 @@ export function DynamicSidebar({
                               "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
                             )
                           }
+                          onClick={() => setSidebarOpen(false)}
                         >
                           <Icon
                             name={item.icon}
