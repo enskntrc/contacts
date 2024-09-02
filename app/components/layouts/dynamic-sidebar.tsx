@@ -6,7 +6,7 @@ import {
 } from "@headlessui/react";
 import { Link, NavLink } from "@remix-run/react";
 import { Icon } from "~/components/icons";
-import type { DynamicSidebarProps } from "~/components/types/contacts";
+import type { DynamicSidebarProps } from "~/components/types/dashboard";
 import { cn } from "~/lib/utils";
 
 export function DynamicSidebar({

@@ -1,11 +1,12 @@
-import { Link } from "@remix-run/react";
+import { useNavigate, useSubmit } from "@remix-run/react";
 import { Icon } from "~/components/icons";
-import type { HeaderProps } from "~/components/types/contacts";
+import type { HeaderProps } from "~/components/types/dashboard";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "~/components/ui/avatar";
+import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,7 +16,14 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 
-export function Header({ navUser, setSidebarOpen }: HeaderProps) {
+export function Header({
+  userLoggedIn,
+  navUser,
+  setSidebarOpen,
+}: HeaderProps) {
+  const submit = useSubmit();
+  const navigate = useNavigate();
+
   return (
     <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
       <button
@@ -94,7 +102,7 @@ export function Header({ navUser, setSidebarOpen }: HeaderProps) {
                   aria-hidden="true"
                   className="ml-4 text-sm font-semibold leading-6 text-gray-900"
                 >
-                  Tom Cook
+                  {userLoggedIn.email}
                 </span>
                 <Icon
                   name="Lucide/chevronsDown"
@@ -104,18 +112,26 @@ export function Header({ navUser, setSidebarOpen }: HeaderProps) {
               </span>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
+              {/* <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator /> */}
               {navUser.map((item) => (
                 <DropdownMenuItem key={item.name}>
-                  <Link
-                    to={item.href}
-                    className="block px-3 py-1 text-sm leading-6 text-gray-900 data-[focus]:bg-gray-50"
+                  <Button
+                    variant="link"
+                    onClick={() => navigate(item.href)}
                   >
                     {item.name}
-                  </Link>
+                  </Button>
                 </DropdownMenuItem>
               ))}
+              <DropdownMenuItem>
+                <Button
+                  variant="link"
+                  onClick={() => submit(null, { method: "post" })}
+                >
+                  Log out
+                </Button>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

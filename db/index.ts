@@ -3,6 +3,7 @@ import { createClient } from "@libsql/client";
 
 import * as users from "./schema/users";
 import * as passwords from "./schema/passwords";
+import * as contacts from "./schema/contacts";
 
 const client = createClient({
   url: process.env.DATABASE_URL!,
@@ -13,5 +14,6 @@ export const db = drizzle(client, {
   schema: {
     ...users,
     ...passwords,
+    ...contacts,
   },
 });

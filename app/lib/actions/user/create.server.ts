@@ -3,7 +3,7 @@ import { generateId } from "~/lib/utils";
 import { db } from "db";
 import { users } from "db/schema/users";
 
-import type { AuthFormData } from "~/components/schemas/auth";
+import type { AuthFormData } from "~/lib/schemas/auth";
 
 import {
   createPassword,

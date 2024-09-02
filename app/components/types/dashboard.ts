@@ -1,4 +1,5 @@
-import { IconName } from "./icon";
+import type { UserFromSession } from "./auth";
+import type { IconName } from "./icon";
 
 export type NavSidebar = {
   name: string;
@@ -24,6 +25,7 @@ export type StaticSideBarProps = {
 };
 
 export type HeaderProps = {
+  userLoggedIn: UserFromSession;
   navUser: NavHeader[];
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };

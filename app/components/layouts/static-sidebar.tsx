@@ -1,6 +1,6 @@
 import { Link, NavLink } from "@remix-run/react";
 import { Icon } from "~/components/icons";
-import type { StaticSideBarProps } from "~/components/types/contacts";
+import type { StaticSideBarProps } from "~/components/types/dashboard";
 import { cn } from "~/lib/utils";
 
 export function StaticSideBar({
@@ -17,7 +17,7 @@ export function StaticSideBar({
             src="contacts.png"
             className="h-8 w-auto"
           />
-          <h1 className="ml-4 text-2xl font-semibold text-gray-500">
+          <h1 className="ml-4 text-2xl font-normal text-gray-500">
             Contacts
           </h1>
         </Link>

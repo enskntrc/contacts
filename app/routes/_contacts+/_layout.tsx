@@ -1,22 +1,30 @@
-import React from "react";
-import { redirectWithError, redirectWithSuccess } from "remix-toast";
-import {
-  ActionFunctionArgs,
-  LoaderFunctionArgs,
-} from "@remix-run/node";
+import { useState } from "react";
+import { redirectWithError } from "remix-toast";
+import { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import {
   Outlet,
   isRouteErrorResponse,
-  //   json,
-  //   useLoaderData,
+  useLoaderData,
   useRouteError,
 } from "@remix-run/react";
+
+import { Header } from "~/components/layouts/header";
 import { Message } from "~/components/feedback/error";
-import { NavSidebar } from "~/components/types/contacts";
-import { DynamicSidebar } from "~/components/layouts/contacts/dynamic-sidebar";
-import { StaticSideBar } from "~/components/layouts/contacts/static-sidebar";
-import { Header } from "~/components/layouts/contacts/header";
+import { NavSidebar } from "~/components/types/dashboard";
+import { StaticSideBar } from "~/components/layouts/static-sidebar";
+import { DynamicSidebar } from "~/components/layouts/dynamic-sidebar";
+
 import { getUserFromSession } from "~/lib/actions/auth/read.server";
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Contacts" },
+    {
+      name: "contacts",
+      content: "Welcome to Google Contacts!",
+    },
+  ];
+};
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const response = await getUserFromSession(request);
@@ -24,7 +32,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   if (!response.successData) {
     return redirectWithError("/auth", "Please first login.");
   } else {
-    return response;
+    return response.successData;
   }
 };
 
@@ -66,13 +74,13 @@ const navManage: NavSidebar[] = [
 
 const userNavigation = [
   { name: "Your profile", href: "#" },
-  { name: "Sign out", href: "#" },
+  // { name: "Sign out", href: "#" },
 ];
 
 function ContactsLayout({ children }: { children: React.ReactNode }) {
-  //   const userLoggedIn = useLoaderData<UserFromSession>();
-
-  const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  const user = useLoaderData<typeof loader>();
+  console.log(user);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div>
@@ -94,6 +102,7 @@ function ContactsLayout({ children }: { children: React.ReactNode }) {
       <div className="lg:pl-72">
         {/* Header */}
         <Header
+          userLoggedIn={user}
           navUser={userNavigation}
           setSidebarOpen={setSidebarOpen}
         />
@@ -116,24 +125,6 @@ export default function App() {
     </ContactsLayout>
   );
 }
-
-// export const action = async ({ request }: ActionFunctionArgs) => {
-//   const response: ResponseDeleteUserSession = await deleteUserSession(
-//     request
-//   );
-
-//   if (response.success) {
-//     return redirectWithSuccess("/", "Çıkış başarılı.", {
-//       headers: {
-//         "Set-Cookie": response.successData ?? "",
-//       },
-//     });
-//   } else if (!response.success) {
-//     return redirectWithError("/dashboard", response.message);
-//   } else {
-//     return json({ ...response });
-//   }
-// };
 
 export function ErrorBoundary() {
   const error = useRouteError();

@@ -9,7 +9,7 @@ import { json, Link } from "@remix-run/react";
 import { getValidatedFormData } from "remix-hook-form";
 import { AuthForm } from "~/components/forms/auth";
 import { Icon } from "~/components/icons";
-import { AuthFormData, schema } from "~/components/schemas/auth";
+import { AuthFormData, schema } from "~/lib/schemas/auth";
 import { redirectWithError, redirectWithSuccess } from "remix-toast";
 
 import { register } from "~/lib/actions/user/create.server";

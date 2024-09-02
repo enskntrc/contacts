@@ -1,5 +1,8 @@
 import { useEffect } from "react";
-import { LoaderFunctionArgs } from "@remix-run/node";
+import {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+} from "@remix-run/node";
 import {
   isRouteErrorResponse,
   json,
@@ -12,11 +15,17 @@ import {
   useRouteError,
 } from "@remix-run/react";
 
-import { getToast } from "remix-toast";
+import {
+  getToast,
+  redirectWithError,
+  redirectWithSuccess,
+} from "remix-toast";
 import { Toaster, toast as notify } from "sonner";
 
 import "./tailwind.css";
 import { Message } from "./components/feedback/error";
+
+import { deleteSession } from "~/lib/actions/auth/delete.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { toast, headers } = await getToast(request);
@@ -67,6 +76,22 @@ export default function App() {
     </RootLayout>
   );
 }
+
+export const action = async ({ request }: ActionFunctionArgs) => {
+  const response = await deleteSession(request);
+
+  if (response.successData) {
+    return redirectWithSuccess("/auth", "Çıkış başarılı.", {
+      headers: {
+        "Set-Cookie": response.successData ?? "",
+      },
+    });
+  } else if (!response.successData) {
+    return redirectWithError("/", response.message);
+  } else {
+    return json({ ...response });
+  }
+};
 
 export function ErrorBoundary() {
   const error = useRouteError();

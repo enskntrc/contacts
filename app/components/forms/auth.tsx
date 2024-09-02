@@ -12,7 +12,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { schema, type AuthFormData } from "../schemas/auth";
+import { schema, type AuthFormData } from "~/lib/schemas/auth";
 import { Action } from "../types/auth";
 import { Separator } from "../ui/separator";
 
