@@ -18,6 +18,7 @@ export const iconNames = [
   "Lucide/folderArchive",
   "Lucide/fileArchive",
   "Lucide/download",
+  "Lucide/circlePlus",
   "Lucide/circleCheck",
   "Lucide/chevronsDown",
   "Lucide/check",

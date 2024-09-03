@@ -17,7 +17,7 @@ export const columns: ColumnDef<Contact>[] = [
   {
     header: "Job Title and Company",
     cell: ({ row }) => {
-      const job = row.original.job;
+      const job = row.original.job_title;
       const company = row.original.company;
       return (
         <div className="flex">
