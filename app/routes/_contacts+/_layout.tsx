@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { redirectWithError } from "remix-toast";
 import { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import {
   Outlet,
@@ -14,7 +13,7 @@ import { NavSidebar } from "~/components/types/dashboard";
 import { StaticSideBar } from "~/components/layouts/static-sidebar";
 import { DynamicSidebar } from "~/components/layouts/dynamic-sidebar";
 
-import { getUserFromSession } from "~/lib/actions/auth/read.server";
+import { authenticator } from "~/lib/actions/services/auth.server";
 
 export const meta: MetaFunction = () => {
   return [
@@ -27,13 +26,9 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const response = await getUserFromSession(request);
-
-  if (!response.successData) {
-    return redirectWithError("/auth", "Please first login.");
-  } else {
-    return response.successData;
-  }
+  return await authenticator.isAuthenticated(request, {
+    failureRedirect: "/login",
+  });
 };
 
 const navOverview: NavSidebar[] = [
@@ -78,9 +73,9 @@ const userNavigation = [
 ];
 
 function ContactsLayout({ children }: { children: React.ReactNode }) {
-  const user = useLoaderData<typeof loader>();
-  console.log(user);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const user = useLoaderData<typeof loader>();
+  if (!user) throw new Error("User not found");
 
   return (
     <div>

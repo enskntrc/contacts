@@ -1,53 +1,23 @@
-import { useEffect } from "react";
-import {
-  ActionFunctionArgs,
-  LoaderFunctionArgs,
-} from "@remix-run/node";
+import { ActionFunctionArgs } from "@remix-run/node";
 import {
   isRouteErrorResponse,
-  json,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLoaderData,
   useRouteError,
 } from "@remix-run/react";
 
-import {
-  getToast,
-  redirectWithError,
-  redirectWithSuccess,
-} from "remix-toast";
-import { Toaster, toast as notify } from "sonner";
-
 import "./tailwind.css";
 import { Message } from "./components/feedback/error";
-
-import { deleteSession } from "~/lib/actions/auth/delete.server";
-
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { toast, headers } = await getToast(request);
-  return json({ toast }, { headers });
-};
+import { authenticator } from "./lib/actions/services/auth.server";
 
 export function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { toast } = useLoaderData<typeof loader>();
-
-  useEffect(() => {
-    if (toast?.type === "error") {
-      notify.error(toast.message);
-    }
-    if (toast?.type === "success") {
-      notify.success(toast.message);
-    }
-  }, [toast]);
-
   return (
     <html lang="en">
       <head>
@@ -61,7 +31,6 @@ export function RootLayout({
       </head>
       <body>
         {children}
-        <Toaster richColors />
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -78,19 +47,9 @@ export default function App() {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const response = await deleteSession(request);
-
-  if (response.successData) {
-    return redirectWithSuccess("/auth", "Çıkış başarılı.", {
-      headers: {
-        "Set-Cookie": response.successData ?? "",
-      },
-    });
-  } else if (!response.successData) {
-    return redirectWithError("/", response.message);
-  } else {
-    return json({ ...response });
-  }
+  return await authenticator.logout(request, {
+    redirectTo: "/login",
+  });
 };
 
 export function ErrorBoundary() {

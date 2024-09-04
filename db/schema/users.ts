@@ -13,10 +13,14 @@ export const users = sqliteTable(
   {
     // attributes
     id: text("id").primaryKey().notNull(),
+    name: text("name"),
     email: text("email").notNull().unique(),
     status: text("status", {
       enum: ["DELETED", "ACTIVE", "PASSIVE"],
     }).notNull(),
+    is_google_signup: integer("is_google_signup", { mode: "boolean" })
+      .notNull()
+      .default(false),
     // timestamps
     created_at: integer("created_at", { mode: "timestamp" })
       .$default(() => new Date())

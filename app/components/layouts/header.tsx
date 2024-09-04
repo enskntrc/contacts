@@ -1,18 +1,13 @@
 import { useNavigate, useSubmit } from "@remix-run/react";
 import { Icon } from "~/components/icons";
 import type { HeaderProps } from "~/components/types/dashboard";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
+  // DropdownMenuLabel,
+  // DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 
@@ -90,19 +85,12 @@ export function Header({
           <DropdownMenu>
             <DropdownMenuTrigger className="-m-1.5 flex items-center p-1.5">
               <span className="sr-only">Open user menu</span>
-              <Avatar>
-                <AvatarImage
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  alt="@shadcn"
-                />
-                <AvatarFallback>USER</AvatarFallback>
-              </Avatar>
               <span className="hidden lg:flex lg:items-center">
                 <span
                   aria-hidden="true"
                   className="ml-4 text-sm font-semibold leading-6 text-gray-900"
                 >
-                  {userLoggedIn.email}
+                  {userLoggedIn?.name}
                 </span>
                 <Icon
                   name="Lucide/chevronsDown"
