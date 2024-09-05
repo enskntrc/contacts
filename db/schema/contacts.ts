@@ -15,9 +15,9 @@ export const contacts = sqliteTable(
       enum: ["DELETED", "ACTIVE", "PASSIVE"],
     }).notNull(),
     prefix: text("prefix"),
-    first_name: text("name").notNull(),
+    first_name: text("name"),
     middle_name: text("middle_name"),
-    last_name: text("last_name").notNull(),
+    last_name: text("last_name"),
     suffix: text("suffix"),
     phonetic_first: text("phonetic_first"),
     phonetic_middle: text("phonetic_middle"),
@@ -30,7 +30,7 @@ export const contacts = sqliteTable(
     department: text("department"),
 
     email: text("email"),
-    phone: text("phone").notNull().unique(),
+    phone: text("phone"),
 
     country: text("country"),
     street: text("street"),
@@ -43,6 +43,9 @@ export const contacts = sqliteTable(
     b_year: text("b_year"),
 
     notes: text("notes"),
+
+    // relationships
+    user_id: text("user_id").notNull(),
 
     // timestamps
     created_at: integer("created_at", { mode: "timestamp" })

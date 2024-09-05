@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form } from "@remix-run/react";
 import { RemixFormProvider, useRemixForm } from "remix-hook-form";
 
@@ -12,8 +12,19 @@ import { Icon } from "../icons";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { schema } from "~/lib/schemas/contact";
+import { Contact } from "../types/contact";
+type ContactFormProps = {
+  userId: string;
+  contact?: Contact;
+};
 
-export function ContactForm() {
+type Action = "?/create" | "?/update";
+
+export function ContactForm({ userId, contact }: ContactFormProps) {
+  const [action, setAction] = useState<Action>("?/create");
+
   const [profile, setProfile] = useState(false);
   const [occupation, setOccupation] = useState(false);
   const [email, setEmail] = useState(false);
@@ -23,45 +34,66 @@ export function ContactForm() {
 
   const form = useRemixForm({
     defaultValues: {
-      prefix: "",
-      first_name: "",
-      middle_name: "",
-      last_name: "",
-      suffix: "",
-      phonetic_first: "",
-      phonetic_middle: "",
-      phonetic_last: "",
-      nickname: "",
-      file_as: "",
+      prefix: contact?.prefix ?? "",
+      first_name: contact?.first_name ?? "",
+      middle_name: contact?.middle_name ?? "",
+      last_name: contact?.last_name ?? "",
+      suffix: contact?.suffix ?? "",
+      phonetic_first: contact?.phonetic_first ?? "",
+      phonetic_middle: contact?.phonetic_middle ?? "",
+      phonetic_last: contact?.phonetic_last ?? "",
+      nickname: contact?.nickname ?? "",
+      file_as: contact?.file_as ?? "",
 
-      company: "",
-      job_title: "",
-      department: "",
+      company: contact?.company ?? "",
+      job_title: contact?.job_title ?? "",
+      department: contact?.department ?? "",
 
-      email: "",
-      phone: "",
+      email: contact?.email ?? "",
+      phone: contact?.phone ?? "",
 
-      country: "",
-      street: "",
-      postcode: "",
-      district: "",
-      province: "",
+      country: contact?.country ?? "",
+      street: contact?.street ?? "",
+      postcode: contact?.postcode ?? "",
+      district: contact?.district ?? "",
+      province: contact?.province ?? "",
 
-      b_day: "",
-      b_month: "",
-      b_year: "",
+      b_day: contact?.b_day ?? "",
+      b_month: contact?.b_month ?? "",
+      b_year: contact?.b_year ?? "",
 
-      notes: "",
+      notes: contact?.notes ?? "",
     },
+    submitConfig: { method: "post", action },
+    submitData: { userId },
+    resolver: zodResolver(schema),
   });
-  const { handleSubmit, control } = form;
+
+  const { handleSubmit, control, formState, reset } = form;
+  const { isSubmitSuccessful } = formState;
+
+  useEffect(() => {
+    if (isSubmitSuccessful) reset();
+  }, [isSubmitSuccessful, reset]);
+
   return (
     <RemixFormProvider {...form}>
       <Form
         onSubmit={handleSubmit}
         className="space-y-6 lg:max-w-[600px]"
       >
-        <Icon name="Lucide/user" className="h-40 w-40" />
+        <div className="flex justify-end">
+          <Button
+            type="submit"
+            className="h-10 w-20 items-center justify-center text-md rounded-full"
+            onClick={() =>
+              setAction(contact ? "?/update" : "?/create")
+            }
+            // disabled={watchAllFields === form.defaultValues}
+          >
+            Save
+          </Button>
+        </div>
 
         <div className="flex">
           <div className="mt-8 w-7">
@@ -334,6 +366,7 @@ export function ContactForm() {
 
         <div className="ml-10 mr-6">
           <Button
+            type="button"
             icon={phone ? "Lucide/circlePlus" : "Lucide/phone"}
             className="w-full justify-center rounded-full bg-indigo-50 text-indigo-600 h-10 hover:bg-indigo-100"
             onClick={() => setPhone(true)}

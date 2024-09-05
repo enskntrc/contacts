@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "99241015-9073-47c6-9027-5e04cb33a8cd",
+  "id": "fca2873b-6596-4355-8e47-7bcd731d200e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "contacts": {
@@ -32,7 +32,7 @@
           "name": "name",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "middle_name": {
@@ -46,7 +46,7 @@
           "name": "last_name",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "suffix": {
@@ -123,7 +123,7 @@
           "name": "phone",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "country": {
@@ -189,6 +189,13 @@
           "notNull": false,
           "autoincrement": false
         },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "integer",
@@ -212,13 +219,6 @@
         }
       },
       "indexes": {
-        "contacts_phone_unique": {
-          "name": "contacts_phone_unique",
-          "columns": [
-            "phone"
-          ],
-          "isUnique": true
-        },
         "contact_status_idx": {
           "name": "contact_status_idx",
           "columns": [
@@ -317,7 +317,7 @@
           "name": "name",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "email": {

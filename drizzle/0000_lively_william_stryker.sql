@@ -2,9 +2,9 @@ CREATE TABLE `contacts` (
 	`id` text PRIMARY KEY NOT NULL,
 	`status` text NOT NULL,
 	`prefix` text,
-	`name` text NOT NULL,
+	`name` text,
 	`middle_name` text,
-	`last_name` text NOT NULL,
+	`last_name` text,
 	`suffix` text,
 	`phonetic_first` text,
 	`phonetic_middle` text,
@@ -15,7 +15,7 @@ CREATE TABLE `contacts` (
 	`job_title` text,
 	`department` text,
 	`email` text,
-	`phone` text NOT NULL,
+	`phone` text,
 	`country` text,
 	`street` text,
 	`postal_code` text,
@@ -25,6 +25,7 @@ CREATE TABLE `contacts` (
 	`b_month` text,
 	`b_year` text,
 	`notes` text,
+	`user_id` text NOT NULL,
 	`created_at` integer NOT NULL,
 	`updated_at` integer,
 	`deleted_at` integer
@@ -43,7 +44,7 @@ CREATE TABLE `passwords` (
 --> statement-breakpoint
 CREATE TABLE `users` (
 	`id` text PRIMARY KEY NOT NULL,
-	`name` text NOT NULL,
+	`name` text,
 	`email` text NOT NULL,
 	`status` text NOT NULL,
 	`is_google_signup` integer DEFAULT false NOT NULL,
@@ -52,7 +53,6 @@ CREATE TABLE `users` (
 	`deleted_at` integer
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `contacts_phone_unique` ON `contacts` (`phone`);--> statement-breakpoint
 CREATE INDEX `contact_status_idx` ON `contacts` (`status`);--> statement-breakpoint
 CREATE UNIQUE INDEX `users_email_unique` ON `users` (`email`);--> statement-breakpoint
 CREATE INDEX `user_status_idx` ON `users` (`status`);

@@ -1,11 +1,19 @@
-import { DataTable } from "~/components/custom/data-table";
-import { columns } from "~/lib/columns/contacts";
+import { ContactList } from "~/components/lists/contact";
 
 import type { Contact } from "~/components/types/contact";
-import { Link } from "@remix-run/react";
+import { Link, useRouteLoaderData } from "@remix-run/react";
+
+type RouteLoaderData = {
+  contacts: Contact[];
+};
 
 export default function Example() {
-  const contacts: Contact[] = [];
+  const routeLoaderData = useRouteLoaderData<RouteLoaderData>(
+    "routes/_contacts+/_layout"
+  );
+  if (!routeLoaderData)
+    throw new Error("Route loader data is not available");
+
   return (
     <div>
       <div className="sm:flex sm:items-center">
@@ -26,7 +34,7 @@ export default function Example() {
       <div className="mt-4 flow-root">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-            <DataTable columns={columns} data={contacts} />
+            <ContactList contacts={routeLoaderData.contacts} />
           </div>
         </div>
       </div>

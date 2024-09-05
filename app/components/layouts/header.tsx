@@ -115,7 +115,12 @@ export function Header({
               <DropdownMenuItem>
                 <Button
                   variant="link"
-                  onClick={() => submit(null, { method: "post" })}
+                  onClick={() =>
+                    submit(null, {
+                      method: "post",
+                      action: "?/logout",
+                    })
+                  }
                 >
                   Log out
                 </Button>

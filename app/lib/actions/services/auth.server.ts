@@ -9,6 +9,7 @@ import { z } from "zod";
 import { db } from "db";
 import { generateId } from "~/lib/utils";
 import { passwords } from "db/schema/passwords";
+import { eq } from "drizzle-orm";
 
 const payloadSchema = z.object({
   name: z.string().optional(),
@@ -91,10 +92,28 @@ const googleStrategy = new GoogleStrategy(
     clientID: process.env.GOOGLE_CLIENT_ID || "",
     clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
     callbackURL: process.env.HOST_URL
-      ? `${process.env.HOST_URL}/google/callback`
-      : "http://localhost:3000/google/callback",
+      ? `${process.env.HOST_URL}/auth/google/callback`
+      : "http://localhost:3000/auth/google/callback",
   },
   async ({ profile }) => {
+    const user = await db.query.users.findFirst({
+      where: (users, { eq }) =>
+        eq(users.email, profile.emails[0].value),
+    });
+
+    if (user) {
+      // update user info with new incoming data
+      return await db
+        .update(users)
+        .set({
+          name: profile.displayName,
+          is_google_signup: true,
+        })
+        .where(eq(users.email, profile.emails[0].value))
+        .returning()
+        .then((res) => res[0] ?? null);
+    }
+
     return await db
       .insert(users)
       .values({

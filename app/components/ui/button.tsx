@@ -60,9 +60,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        {icon ? (
+        {icon && (
           <Icon name={icon} className="-ml-0.5 mr-3 h-5 w-5 bg-" />
-        ) : null}
+        )}
         {props.children}
       </Comp>
     );

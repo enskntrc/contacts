@@ -1,8 +1,13 @@
 import { useState } from "react";
-import { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
+import {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  MetaFunction,
+} from "@remix-run/node";
 import {
   Outlet,
   isRouteErrorResponse,
+  json,
   useLoaderData,
   useRouteError,
 } from "@remix-run/react";
@@ -14,6 +19,8 @@ import { StaticSideBar } from "~/components/layouts/static-sidebar";
 import { DynamicSidebar } from "~/components/layouts/dynamic-sidebar";
 
 import { authenticator } from "~/lib/actions/services/auth.server";
+import { db } from "db";
+import { namedAction } from "remix-utils/named-action";
 
 export const meta: MetaFunction = () => {
   return [
@@ -26,9 +33,20 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  return await authenticator.isAuthenticated(request, {
+  const user = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
+
+  const contacts = await db.query.contacts.findMany({
+    where: (contacts, { eq, and }) =>
+      and(
+        eq(contacts.status, "ACTIVE"),
+        eq(contacts.user_id, user.id)
+      ),
+    orderBy: (contacts, { asc }) => [asc(contacts.first_name)],
+  });
+
+  return { user, contacts };
 };
 
 const navOverview: NavSidebar[] = [
@@ -74,8 +92,8 @@ const userNavigation = [
 
 function ContactsLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const user = useLoaderData<typeof loader>();
-  if (!user) throw new Error("User not found");
+  const loaderData = useLoaderData<typeof loader>();
+  if (!loaderData.user) throw new Error("User not found");
 
   return (
     <div>
@@ -97,7 +115,7 @@ function ContactsLayout({ children }: { children: React.ReactNode }) {
       <div className="lg:pl-72">
         {/* Header */}
         <Header
-          userLoggedIn={user}
+          userLoggedIn={loaderData.user}
           navUser={userNavigation}
           setSidebarOpen={setSidebarOpen}
         />
@@ -120,6 +138,18 @@ export default function App() {
     </ContactsLayout>
   );
 }
+
+export const action = async ({
+  request,
+  params,
+}: ActionFunctionArgs) => {
+  return namedAction(request, {
+    async delete() {
+      console.log("Deleting contact", params);
+      return json({ message: "Contact deleted" });
+    },
+  });
+};
 
 export function ErrorBoundary() {
   const error = useRouteError();
