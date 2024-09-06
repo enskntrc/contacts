@@ -11,7 +11,7 @@ import {
   useNavigation,
 } from "@remix-run/react";
 import { Separator } from "~/components/ui/separator";
-import { authenticator } from "~/lib/actions/services/auth.server";
+import { authenticator } from "~/lib/services/auth.server";
 import { schema } from "~/lib/schemas/register";
 import { z } from "zod";
 import { db } from "db";
@@ -20,7 +20,7 @@ import { Button } from "~/components/ui/button";
 import {
   commitSession,
   getSession,
-} from "~/lib/actions/services/session.server";
+} from "~/lib/services/session.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   // If the user is already authenticated redirect to /dashboard directly

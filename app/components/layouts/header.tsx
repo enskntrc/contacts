@@ -1,4 +1,4 @@
-import { useNavigate, useSubmit } from "@remix-run/react";
+import { Form, useNavigate, useSubmit } from "@remix-run/react";
 import { Icon } from "~/components/icons";
 import type { HeaderProps } from "~/components/types/dashboard";
 import { Button } from "~/components/ui/button";
@@ -10,6 +10,7 @@ import {
   // DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export function Header({
   userLoggedIn,
@@ -41,12 +42,8 @@ export function Header({
       />
 
       <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-        <form
-          action="#"
-          method="GET"
-          className="relative flex flex-1"
-        >
-          <label htmlFor="search-field" className="sr-only">
+        <Form className="relative flex flex-1" role="search">
+          <label htmlFor="q" className="sr-only">
             Search
           </label>
           <Icon
@@ -55,13 +52,13 @@ export function Header({
             className="pointer-events-none absolute inset-y-0 left-0 h-full w-5 text-gray-400"
           />
           <input
-            id="search-field"
-            name="search"
+            id="q"
+            name="q"
             type="search"
             placeholder="Search..."
             className="block h-full w-full border-0 py-0 pl-8 pr-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
           />
-        </form>
+        </Form>
         <div className="flex items-center gap-x-4 lg:gap-x-6">
           <button
             type="button"
@@ -85,6 +82,16 @@ export function Header({
           <DropdownMenu>
             <DropdownMenuTrigger className="-m-1.5 flex items-center p-1.5">
               <span className="sr-only">Open user menu</span>
+              <Avatar>
+                <AvatarImage src="avatar.jpg" alt="@shadcn" />
+                <AvatarFallback>
+                  <span className="text-xs font-semibold leading-4 text-white bg-gray-400 rounded-full h-8 w-8 flex items-center justify-center">
+                    {userLoggedIn.name
+                      ? userLoggedIn.name[0].toUpperCase()
+                      : "UK"}
+                  </span>
+                </AvatarFallback>
+              </Avatar>
               <span className="hidden lg:flex lg:items-center">
                 <span
                   aria-hidden="true"
@@ -118,7 +125,7 @@ export function Header({
                   onClick={() =>
                     submit(null, {
                       method: "post",
-                      action: "?/logout",
+                      action: "/auth/logout",
                     })
                   }
                 >

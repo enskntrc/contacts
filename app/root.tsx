@@ -1,23 +1,49 @@
-import { ActionFunctionArgs } from "@remix-run/node";
+import {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+} from "@remix-run/node";
 import {
   isRouteErrorResponse,
   json,
   Links,
   Meta,
   Outlet,
-  redirect,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
   useRouteError,
 } from "@remix-run/react";
 
 import "./tailwind.css";
 import { Message } from "./components/feedback/error";
-import { authenticator } from "./lib/actions/services/auth.server";
+import { authenticator } from "./lib/services/auth.server";
 import { namedAction } from "remix-utils/named-action";
-import { db } from "db";
-import { contacts } from "db/schema/contacts";
-import { eq } from "drizzle-orm";
+
+import { Toaster, toast as notify } from "sonner";
+import {
+  getToast,
+  redirectWithError,
+  redirectWithSuccess,
+} from "remix-toast";
+import { useEffect } from "react";
+import { softDeleteContact } from "./lib/server/update.server";
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const { toast, headers } = await getToast(request);
+
+  const FRONTEND_ENV = {
+    S3_ENDPOINT: process.env.S3_ENDPOINT!,
+    S3_BUCKET_NAME: process.env.S3_BUCKET_NAME!,
+  };
+
+  return json(
+    {
+      toast,
+      FRONTEND_ENV,
+    },
+    { headers }
+  );
+};
 
 export function RootLayout({
   children,
@@ -37,6 +63,7 @@ export function RootLayout({
       </head>
       <body>
         {children}
+
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -45,8 +72,23 @@ export function RootLayout({
 }
 
 export default function App() {
+  const { toast, FRONTEND_ENV } = useLoaderData<typeof loader>();
+
+  useEffect(() => {
+    window.ENV = FRONTEND_ENV;
+  }, [FRONTEND_ENV]);
+
+  useEffect(() => {
+    if (toast?.type === "error") {
+      notify.error(toast.message);
+    }
+    if (toast?.type === "success") {
+      notify.success(toast.message);
+    }
+  }, [toast]);
   return (
     <RootLayout>
+      <Toaster richColors />
       <Outlet />
     </RootLayout>
   );
@@ -56,25 +98,20 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const contactId = formData.get("contactId");
   return namedAction(request, {
-    async logout() {
-      return await authenticator.logout(request, {
-        redirectTo: "/login",
-      });
-    },
     async delete() {
-      // console.log("delete", contactId);
-      await db
-        .update(contacts)
-        .set({
-          status: "DELETED",
-          deleted_at: new Date(),
-        })
-        .where(eq(contacts.id, contactId as string))
-        .returning()
-        .then((res) => res[0] ?? null);
-
-      return redirect("/");
-      // return json({ data: "deleted" });
+      const response = await softDeleteContact(contactId as string);
+      if (response.error) {
+        return redirectWithError("/", response.message);
+      } else if (response.success) {
+        return redirectWithSuccess("/", response.message);
+      } else {
+        return json(
+          { error: "There was an error deleting the contact" },
+          {
+            status: 500,
+          }
+        );
+      }
     },
   });
 };

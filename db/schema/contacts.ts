@@ -12,8 +12,10 @@ export const contacts = sqliteTable(
     // attributes
     id: text("id").primaryKey().notNull(),
     status: text("status", {
-      enum: ["DELETED", "ACTIVE", "PASSIVE"],
+      enum: ["DELETED", "ACTIVE"],
     }).notNull(),
+    img_url: text("img_url"),
+    img_path: text("img_path"),
     prefix: text("prefix"),
     first_name: text("name"),
     middle_name: text("middle_name"),

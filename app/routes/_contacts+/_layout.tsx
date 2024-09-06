@@ -1,13 +1,8 @@
 import { useState } from "react";
-import {
-  ActionFunctionArgs,
-  LoaderFunctionArgs,
-  MetaFunction,
-} from "@remix-run/node";
+import { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import {
   Outlet,
   isRouteErrorResponse,
-  json,
   useLoaderData,
   useRouteError,
 } from "@remix-run/react";
@@ -18,9 +13,8 @@ import { NavSidebar } from "~/components/types/dashboard";
 import { StaticSideBar } from "~/components/layouts/static-sidebar";
 import { DynamicSidebar } from "~/components/layouts/dynamic-sidebar";
 
-import { authenticator } from "~/lib/actions/services/auth.server";
+import { authenticator } from "~/lib/services/auth.server";
 import { db } from "db";
-import { namedAction } from "remix-utils/named-action";
 
 export const meta: MetaFunction = () => {
   return [
@@ -38,13 +32,18 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   });
 
   const contacts = await db.query.contacts.findMany({
-    where: (contacts, { eq, and }) =>
+    where: (contacts, { and, eq, not }) =>
       and(
+        eq(contacts.user_id, user.id),
         eq(contacts.status, "ACTIVE"),
-        eq(contacts.user_id, user.id)
+        not(eq(contacts.phone, ""))
       ),
     orderBy: (contacts, { asc }) => [asc(contacts.first_name)],
   });
+
+  if (!contacts) {
+    throw new Error("There was an error fetching contacts");
+  }
 
   return { user, contacts };
 };
@@ -80,7 +79,7 @@ const navManage: NavSidebar[] = [
   },
   {
     name: "Bin",
-    href: "trash",
+    href: "bin",
     icon: "Lucide/trash2",
   },
 ];
@@ -93,6 +92,7 @@ const userNavigation = [
 function ContactsLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const loaderData = useLoaderData<typeof loader>();
+
   if (!loaderData.user) throw new Error("User not found");
 
   return (
@@ -138,18 +138,6 @@ export default function App() {
     </ContactsLayout>
   );
 }
-
-export const action = async ({
-  request,
-  params,
-}: ActionFunctionArgs) => {
-  return namedAction(request, {
-    async delete() {
-      console.log("Deleting contact", params);
-      return json({ message: "Contact deleted" });
-    },
-  });
-};
 
 export function ErrorBoundary() {
   const error = useRouteError();

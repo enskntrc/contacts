@@ -1,12 +1,14 @@
-import { Link, NavLink } from "@remix-run/react";
+import { Link, useNavigate, NavLink } from "@remix-run/react";
 import { Icon } from "~/components/icons";
 import type { StaticSideBarProps } from "~/components/types/dashboard";
 import { cn } from "~/lib/utils";
+import { Button } from "../ui/button";
 
 export function StaticSideBar({
   navOverview,
   navManage,
 }: StaticSideBarProps) {
+  const navigate = useNavigate();
   return (
     <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
       {/* Sidebar component, swap this element with another sidebar if you like */}
@@ -21,6 +23,13 @@ export function StaticSideBar({
             Contacts
           </h1>
         </Link>
+        <Button
+          type="button"
+          onClick={() => navigate("/new")}
+          className="hidden lg:block"
+        >
+          Add Contact
+        </Button>
         <nav className="flex flex-1 flex-col">
           <ul
             //   role="list"

@@ -4,6 +4,8 @@ export type Contact = {
   // attributes
   id: string;
   status: ContactStatus;
+  img_url: string | null;
+  img_path: string | null;
   prefix: string | null;
   first_name: string;
   middle_name: string | null;
@@ -34,8 +36,20 @@ export type Contact = {
 
   notes: string | null;
 
+  // relationships
+  user_id: string;
+
   // timestamps
   createdAt: string;
   updatedAt: string | null;
   deletedAt: string | null;
 };
+
+export type ContactFormProps = {
+  userId: string;
+  contact?: Contact;
+  imgPath?: string | null;
+  imgUrl?: string | null;
+};
+
+export type Action = "?/create" | "?/update";

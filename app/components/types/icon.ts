@@ -14,6 +14,7 @@ export const iconNames = [
   "Lucide/shoppingCart",
   "Lucide/search",
   "Lucide/refreshCcw",
+  "Lucide/plus",
   "Lucide/phone",
   "Lucide/personStanding",
   "Lucide/menu",

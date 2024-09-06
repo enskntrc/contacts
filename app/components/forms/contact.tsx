@@ -14,15 +14,14 @@ import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { schema } from "~/lib/schemas/contact";
-import { Contact } from "../types/contact";
-type ContactFormProps = {
-  userId: string;
-  contact?: Contact;
-};
+import { Action, ContactFormProps } from "../types/contact";
 
-type Action = "?/create" | "?/update";
-
-export function ContactForm({ userId, contact }: ContactFormProps) {
+export function ContactForm({
+  userId,
+  contact,
+  imgPath,
+  imgUrl,
+}: ContactFormProps) {
   const [action, setAction] = useState<Action>("?/create");
 
   const [profile, setProfile] = useState(false);
@@ -65,7 +64,7 @@ export function ContactForm({ userId, contact }: ContactFormProps) {
       notes: contact?.notes ?? "",
     },
     submitConfig: { method: "post", action },
-    submitData: { userId },
+    submitData: { userId, imgPath, imgUrl },
     resolver: zodResolver(schema),
   });
 
@@ -80,7 +79,7 @@ export function ContactForm({ userId, contact }: ContactFormProps) {
     <RemixFormProvider {...form}>
       <Form
         onSubmit={handleSubmit}
-        className="space-y-6 lg:max-w-[600px]"
+        className="space-y-6 lg:max-w-[600px] md:max-w-[600px]"
       >
         <div className="flex justify-end">
           <Button

@@ -1,6 +1,8 @@
 CREATE TABLE `contacts` (
 	`id` text PRIMARY KEY NOT NULL,
 	`status` text NOT NULL,
+	`img_url` text,
+	`img_path` text,
 	`prefix` text,
 	`name` text,
 	`middle_name` text,

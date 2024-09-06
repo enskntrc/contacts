@@ -94,6 +94,7 @@ const googleStrategy = new GoogleStrategy(
     callbackURL: process.env.HOST_URL
       ? `${process.env.HOST_URL}/auth/google/callback`
       : "http://localhost:3000/auth/google/callback",
+    prompt: "consent",
   },
   async ({ profile }) => {
     const user = await db.query.users.findFirst({

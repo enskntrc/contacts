@@ -14,11 +14,11 @@ import { db } from "db";
 import { z } from "zod";
 import { LoginForm } from "~/components/forms/login";
 import { Button } from "~/components/ui/button";
-import { authenticator } from "~/lib/actions/services/auth.server";
+import { authenticator } from "~/lib/services/auth.server";
 import {
   commitSession,
   getSession,
-} from "~/lib/actions/services/session.server";
+} from "~/lib/services/session.server";
 import { schema } from "~/lib/schemas/login";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -30,12 +30,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function Login() {
   const navigation = useNavigation();
+  const lastResult = useActionData<typeof action>();
+
+  console.log("lastResult", lastResult);
+
   const isFormSubmitting = navigation.state === "submitting";
   const isSigningInWithEmail =
     isFormSubmitting && navigation.formAction !== "/auth/google";
   const isSigningInWithGoogle =
     isFormSubmitting && navigation.formAction === "/auth/google";
-  const lastResult = useActionData<typeof action>();
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">

@@ -34,6 +34,10 @@ export function LoginForm({
 
   return (
     <Form method="post" {...getFormProps(form)}>
+      <div className="mt-2 text-sm text-red-500">{form.errors}</div>
+      <div className="mt-2 text-sm text-red-500">
+        {lastResult?.error?.message}
+      </div>
       <div>
         <Label htmlFor={email.id}>Email</Label>
         <div className="mt-2">
