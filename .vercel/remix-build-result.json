@@ -1,0 +1,273 @@
+{
+  "buildManifest": {
+    "serverBundles": {
+      "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0": {
+        "id": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+        "file": "build/server/nodejs-eyJydW50aW1lIjoibm9kZWpzIn0/index.js",
+        "config": {
+          "runtime": "nodejs"
+        }
+      }
+    },
+    "routeIdToServerBundleId": {
+      "root": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/_auth+/auth.google": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/_auth+/auth.google.callback": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/_auth+/auth.logout": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/_auth+/login": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/_auth+/register": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/_contacts+/$id": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/_contacts+/bin+/index": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/_contacts+/frequent+/$id": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/_contacts+/frequent+/index": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/_contacts+/index": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/_contacts+/other+/$id": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/_contacts+/other+/index": "nodejs-eyJydW50aW1lIjoibm9kZWpzIn0"
+    },
+    "routes": {
+      "root": {
+        "path": "",
+        "id": "root",
+        "file": "app/root.tsx",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/_auth+/_layout": {
+        "id": "routes/_auth+/_layout",
+        "parentId": "root",
+        "file": "app/routes/_auth+/_layout.tsx",
+        "config": {}
+      },
+      "routes/_auth+/auth.google": {
+        "path": "auth/google",
+        "id": "routes/_auth+/auth.google",
+        "parentId": "routes/_auth+/_layout",
+        "file": "app/routes/_auth+/auth.google.ts",
+        "config": {}
+      },
+      "routes/_auth+/auth.google.callback": {
+        "path": "callback",
+        "id": "routes/_auth+/auth.google.callback",
+        "parentId": "routes/_auth+/auth.google",
+        "file": "app/routes/_auth+/auth.google.callback.ts",
+        "config": {}
+      },
+      "routes/_auth+/auth.logout": {
+        "path": "auth/logout",
+        "id": "routes/_auth+/auth.logout",
+        "parentId": "routes/_auth+/_layout",
+        "file": "app/routes/_auth+/auth.logout.ts",
+        "config": {}
+      },
+      "routes/_auth+/login": {
+        "path": "login",
+        "id": "routes/_auth+/login",
+        "parentId": "routes/_auth+/_layout",
+        "file": "app/routes/_auth+/login.tsx",
+        "config": {}
+      },
+      "routes/_auth+/register": {
+        "path": "register",
+        "id": "routes/_auth+/register",
+        "parentId": "routes/_auth+/_layout",
+        "file": "app/routes/_auth+/register.tsx",
+        "config": {}
+      },
+      "routes/_contacts+/_layout": {
+        "id": "routes/_contacts+/_layout",
+        "parentId": "root",
+        "file": "app/routes/_contacts+/_layout.tsx",
+        "config": {}
+      },
+      "routes/_contacts+/$id": {
+        "path": ":id",
+        "id": "routes/_contacts+/$id",
+        "parentId": "routes/_contacts+/_layout",
+        "file": "app/routes/_contacts+/$id.tsx",
+        "config": {}
+      },
+      "routes/_contacts+/bin+/index": {
+        "path": "bin/",
+        "index": true,
+        "id": "routes/_contacts+/bin+/index",
+        "parentId": "routes/_contacts+/_layout",
+        "file": "app/routes/_contacts+/bin+/index.tsx",
+        "config": {}
+      },
+      "routes/_contacts+/frequent+/_layout": {
+        "path": "frequent",
+        "id": "routes/_contacts+/frequent+/_layout",
+        "parentId": "routes/_contacts+/_layout",
+        "file": "app/routes/_contacts+/frequent+/_layout.tsx",
+        "config": {}
+      },
+      "routes/_contacts+/frequent+/$id": {
+        "path": ":id",
+        "id": "routes/_contacts+/frequent+/$id",
+        "parentId": "routes/_contacts+/frequent+/_layout",
+        "file": "app/routes/_contacts+/frequent+/$id.tsx",
+        "config": {}
+      },
+      "routes/_contacts+/frequent+/index": {
+        "index": true,
+        "id": "routes/_contacts+/frequent+/index",
+        "parentId": "routes/_contacts+/frequent+/_layout",
+        "file": "app/routes/_contacts+/frequent+/index.tsx",
+        "config": {}
+      },
+      "routes/_contacts+/index": {
+        "index": true,
+        "id": "routes/_contacts+/index",
+        "parentId": "routes/_contacts+/_layout",
+        "file": "app/routes/_contacts+/index.tsx",
+        "config": {}
+      },
+      "routes/_contacts+/other+/_layout": {
+        "path": "other",
+        "id": "routes/_contacts+/other+/_layout",
+        "parentId": "routes/_contacts+/_layout",
+        "file": "app/routes/_contacts+/other+/_layout.tsx",
+        "config": {}
+      },
+      "routes/_contacts+/other+/$id": {
+        "path": ":id",
+        "id": "routes/_contacts+/other+/$id",
+        "parentId": "routes/_contacts+/other+/_layout",
+        "file": "app/routes/_contacts+/other+/$id.tsx",
+        "config": {}
+      },
+      "routes/_contacts+/other+/index": {
+        "index": true,
+        "id": "routes/_contacts+/other+/index",
+        "parentId": "routes/_contacts+/other+/_layout",
+        "file": "app/routes/_contacts+/other+/index.tsx",
+        "config": {}
+      }
+    }
+  },
+  "remixConfig": {
+    "appDirectory": "/home/enesk/projects/contacts/app",
+    "basename": "/",
+    "buildDirectory": "/home/enesk/projects/contacts/build",
+    "future": {
+      "v3_fetcherPersist": false,
+      "v3_relativeSplatPath": false,
+      "v3_throwAbortReason": false,
+      "unstable_singleFetch": false,
+      "unstable_lazyRouteDiscovery": false
+    },
+    "manifest": false,
+    "publicPath": "/",
+    "routes": {
+      "root": {
+        "path": "",
+        "id": "root",
+        "file": "root.tsx"
+      },
+      "routes/_auth+/_layout": {
+        "id": "routes/_auth+/_layout",
+        "parentId": "root",
+        "file": "routes/_auth+/_layout.tsx"
+      },
+      "routes/_auth+/auth.google": {
+        "path": "auth/google",
+        "id": "routes/_auth+/auth.google",
+        "parentId": "routes/_auth+/_layout",
+        "file": "routes/_auth+/auth.google.ts"
+      },
+      "routes/_auth+/auth.google.callback": {
+        "path": "callback",
+        "id": "routes/_auth+/auth.google.callback",
+        "parentId": "routes/_auth+/auth.google",
+        "file": "routes/_auth+/auth.google.callback.ts"
+      },
+      "routes/_auth+/auth.logout": {
+        "path": "auth/logout",
+        "id": "routes/_auth+/auth.logout",
+        "parentId": "routes/_auth+/_layout",
+        "file": "routes/_auth+/auth.logout.ts"
+      },
+      "routes/_auth+/login": {
+        "path": "login",
+        "id": "routes/_auth+/login",
+        "parentId": "routes/_auth+/_layout",
+        "file": "routes/_auth+/login.tsx"
+      },
+      "routes/_auth+/register": {
+        "path": "register",
+        "id": "routes/_auth+/register",
+        "parentId": "routes/_auth+/_layout",
+        "file": "routes/_auth+/register.tsx"
+      },
+      "routes/_contacts+/_layout": {
+        "id": "routes/_contacts+/_layout",
+        "parentId": "root",
+        "file": "routes/_contacts+/_layout.tsx"
+      },
+      "routes/_contacts+/$id": {
+        "path": ":id",
+        "id": "routes/_contacts+/$id",
+        "parentId": "routes/_contacts+/_layout",
+        "file": "routes/_contacts+/$id.tsx"
+      },
+      "routes/_contacts+/bin+/index": {
+        "path": "bin/",
+        "index": true,
+        "id": "routes/_contacts+/bin+/index",
+        "parentId": "routes/_contacts+/_layout",
+        "file": "routes/_contacts+/bin+/index.tsx"
+      },
+      "routes/_contacts+/frequent+/_layout": {
+        "path": "frequent",
+        "id": "routes/_contacts+/frequent+/_layout",
+        "parentId": "routes/_contacts+/_layout",
+        "file": "routes/_contacts+/frequent+/_layout.tsx"
+      },
+      "routes/_contacts+/frequent+/$id": {
+        "path": ":id",
+        "id": "routes/_contacts+/frequent+/$id",
+        "parentId": "routes/_contacts+/frequent+/_layout",
+        "file": "routes/_contacts+/frequent+/$id.tsx"
+      },
+      "routes/_contacts+/frequent+/index": {
+        "index": true,
+        "id": "routes/_contacts+/frequent+/index",
+        "parentId": "routes/_contacts+/frequent+/_layout",
+        "file": "routes/_contacts+/frequent+/index.tsx"
+      },
+      "routes/_contacts+/index": {
+        "index": true,
+        "id": "routes/_contacts+/index",
+        "parentId": "routes/_contacts+/_layout",
+        "file": "routes/_contacts+/index.tsx"
+      },
+      "routes/_contacts+/other+/_layout": {
+        "path": "other",
+        "id": "routes/_contacts+/other+/_layout",
+        "parentId": "routes/_contacts+/_layout",
+        "file": "routes/_contacts+/other+/_layout.tsx"
+      },
+      "routes/_contacts+/other+/$id": {
+        "path": ":id",
+        "id": "routes/_contacts+/other+/$id",
+        "parentId": "routes/_contacts+/other+/_layout",
+        "file": "routes/_contacts+/other+/$id.tsx"
+      },
+      "routes/_contacts+/other+/index": {
+        "index": true,
+        "id": "routes/_contacts+/other+/index",
+        "parentId": "routes/_contacts+/other+/_layout",
+        "file": "routes/_contacts+/other+/index.tsx"
+      }
+    },
+    "serverBuildFile": "index.js",
+    "serverModuleFormat": "esm",
+    "ssr": true
+  },
+  "viteConfig": {
+    "build": {
+      "assetsDir": "assets"
+    }
+  }
+}

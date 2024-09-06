@@ -4,6 +4,7 @@ import { vitePlugin as remix } from "@remix-run/dev";
 import { flatRoutes } from "remix-flat-routes";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { iconsSpritesheet } from "vite-plugin-icons-spritesheet";
+import { vercelPreset } from "@vercel/remix/vite";
 
 export default defineConfig({
   plugins: [
@@ -15,6 +16,7 @@ export default defineConfig({
       routes: async (defineRoutes) => {
         return flatRoutes("routes", defineRoutes);
       },
+      presets: [vercelPreset()],
     }),
     tsconfigPaths(),
     iconsSpritesheet({

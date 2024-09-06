@@ -1,5 +1,5 @@
 import { drizzle } from "drizzle-orm/libsql";
-import { createClient } from "@libsql/client";
+import { createClient } from "libsql-stateless-easy";
 
 import * as users from "./schema/users";
 import * as passwords from "./schema/passwords";
@@ -10,7 +10,7 @@ const client = createClient({
   authToken: process.env.DATABASE_AUTH_TOKEN,
 });
 
-export const db = drizzle(client, {
+export const db = drizzle(client as any, {
   schema: {
     ...users,
     ...passwords,
