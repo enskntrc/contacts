@@ -1,4 +1,9 @@
-import { Form, useNavigate, useSubmit } from "@remix-run/react";
+import {
+  Form,
+  useNavigate,
+  useNavigation,
+  useSubmit,
+} from "@remix-run/react";
 import { Icon } from "~/components/icons";
 import type { HeaderProps } from "~/components/types/dashboard";
 import { Button } from "~/components/ui/button";
@@ -11,14 +16,26 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { useEffect, useState } from "react";
 
 export function Header({
   userLoggedIn,
+  q,
   navUser,
   setSidebarOpen,
 }: HeaderProps) {
   const submit = useSubmit();
   const navigate = useNavigate();
+  const navigation = useNavigation();
+  const searching =
+    navigation.location &&
+    new URLSearchParams(navigation.location.search).has("q");
+
+  const [query, setQuery] = useState(q || "");
+
+  useEffect(() => {
+    setQuery(q || "");
+  }, [q]);
 
   return (
     <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
@@ -42,12 +59,16 @@ export function Header({
       />
 
       <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-        <Form className="relative flex flex-1" role="search">
+        <Form
+          onChange={(event) => submit(event.currentTarget)}
+          className="relative flex flex-1"
+          role="search"
+        >
           <label htmlFor="q" className="sr-only">
             Search
           </label>
           <Icon
-            name="Lucide/search"
+            name={searching ? "Lucide/refreshCcw" : "Lucide/search"}
             aria-hidden="true"
             className="pointer-events-none absolute inset-y-0 left-0 h-full w-5 text-gray-400"
           />
@@ -55,6 +76,9 @@ export function Header({
             id="q"
             name="q"
             type="search"
+            value={query}
+            defaultValue={q || ""}
+            onChange={(event) => setQuery(event.currentTarget.value)}
             placeholder="Search..."
             className="block h-full w-full border-0 py-0 pl-8 pr-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
           />

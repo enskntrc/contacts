@@ -31,12 +31,22 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     failureRedirect: "/login",
   });
 
+  const url = new URL(request.url);
+  const q = url.searchParams.get("q");
+
   const contacts = await db.query.contacts.findMany({
-    where: (contacts, { and, eq, not }) =>
+    where: (contacts, { and, eq, not, or, like }) =>
       and(
         eq(contacts.user_id, user.id),
         eq(contacts.status, "ACTIVE"),
-        not(eq(contacts.phone, ""))
+        not(eq(contacts.phone, "")),
+        q
+          ? or(
+              like(contacts.first_name, `%${q}%`),
+              like(contacts.last_name, `%${q}%`),
+              like(contacts.phone, `%${q}%`)
+            )
+          : undefined
       ),
     orderBy: (contacts, { asc }) => [asc(contacts.first_name)],
   });
@@ -45,7 +55,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     throw new Error("There was an error fetching contacts");
   }
 
-  return { user, contacts };
+  return { user, contacts, q };
 };
 
 const navOverview: NavSidebar[] = [
@@ -116,6 +126,7 @@ function ContactsLayout({ children }: { children: React.ReactNode }) {
         {/* Header */}
         <Header
           userLoggedIn={loaderData.user}
+          q={loaderData.q}
           navUser={userNavigation}
           setSidebarOpen={setSidebarOpen}
         />

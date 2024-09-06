@@ -26,6 +26,7 @@ export type StaticSideBarProps = {
 
 export type HeaderProps = {
   userLoggedIn: NakedUser;
+  q: string | null;
   navUser: NavHeader[];
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
