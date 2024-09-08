@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Form } from "@remix-run/react";
+import { Form, useNavigation } from "@remix-run/react";
 import { RemixFormProvider, useRemixForm } from "remix-hook-form";
 
 import {
@@ -21,6 +21,7 @@ export function ContactForm({
   contact,
   base64Image,
 }: ContactFormProps) {
+  const navigation = useNavigation();
   const [action, setAction] = useState<Action>("?/create");
 
   const [profile, setProfile] = useState(false);
@@ -83,13 +84,13 @@ export function ContactForm({
         <div className="flex justify-end">
           <Button
             type="submit"
-            className="h-10 w-20 items-center justify-center text-md rounded-full"
+            className="text-md rounded-full"
             onClick={() =>
               setAction(contact ? "?/update" : "?/create")
             }
-            // disabled={watchAllFields === form.defaultValues}
+            disabled={navigation.state !== "idle"}
           >
-            Save
+            {navigation.state === "idle" ? "Save" : "Saving..."}
           </Button>
         </div>
 

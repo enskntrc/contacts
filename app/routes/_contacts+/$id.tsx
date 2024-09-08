@@ -1,12 +1,12 @@
+import { useState, useCallback } from "react";
 import { namedAction } from "remix-utils/named-action";
 import { getValidatedFormData } from "remix-hook-form";
 import { FileWithPath, useDropzone } from "react-dropzone";
-import { useState, useCallback, useEffect, useRef } from "react";
 
-import { ActionFunctionArgs, json } from "@remix-run/node";
-import { redirectWithError, redirectWithSuccess } from "remix-toast";
-import { useParams, useRouteLoaderData } from "@remix-run/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ActionFunctionArgs, json } from "@remix-run/node";
+import { useParams, useRouteLoaderData } from "@remix-run/react";
+import { redirectWithError, redirectWithSuccess } from "remix-toast";
 
 import {
   Avatar,
@@ -19,10 +19,7 @@ import { ContactForm } from "~/components/forms/contact";
 import { ImageCropper } from "~/components/custom/image-cropper";
 
 import { createContactWithImage } from "~/lib/server/create.server";
-import {
-  updateContact,
-  updateContactWithImage,
-} from "~/lib/server/update.server";
+import { updateContactWithImage } from "~/lib/server/update.server";
 import { type ContactFormData, schema } from "~/lib/schemas/contact";
 
 type RouteLoaderData = {
@@ -98,7 +95,10 @@ export default function EditContact() {
             className="size-36 cursor-pointer ring-offset-2 ring-2 ring-slate-200"
           >
             <input {...getInputProps()} />
-            <AvatarImage src="profile.png" alt="@shadcn" />
+            <AvatarImage
+              src={contact?.img_url ?? `profile.png`}
+              alt="@shadcn"
+            />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         )}
