@@ -31,12 +31,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function Register() {
   const navigation = useNavigation();
+  const lastResult = useActionData<typeof action>();
+
   const isFormSubmitting = navigation.state === "submitting";
   const isRegisteringWithEmail =
     isFormSubmitting && navigation.formAction !== "/auth/google";
   const isRegisteringWithGoogle =
     isFormSubmitting && navigation.formAction === "/auth/google";
-  const lastResult = useActionData<typeof action>();
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -55,7 +56,7 @@ export default function Register() {
         <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
           <RegisterForm
             lastResult={lastResult}
-            isRegisteringWithEmail={isRegisteringWithEmail}
+            isPending={isRegisteringWithEmail}
           />
 
           <p className="mt-10 text-start text-sm text-gray-500">

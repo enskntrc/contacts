@@ -15,10 +15,10 @@ import { Button } from "~/components/ui/button";
 import { schema } from "~/lib/schemas/register";
 
 export function RegisterForm({
-  isRegisteringWithEmail,
+  isPending,
   lastResult,
 }: {
-  isRegisteringWithEmail: boolean;
+  isPending: boolean;
   lastResult: SubmissionResult<string[]> | undefined | null;
 }) {
   const id = useId();
@@ -85,15 +85,11 @@ export function RegisterForm({
       <Button
         type="submit"
         variant="constructive"
-        icon={
-          isRegisteringWithEmail
-            ? "Lucide/refreshCcw"
-            : "Lucide/check"
-        }
+        icon={isPending ? "Lucide/refreshCcw" : "Lucide/check"}
         className="mt-6 bg-transparent w-full justify-center"
-        disabled={isRegisteringWithEmail}
+        disabled={isPending}
       >
-        {isRegisteringWithEmail ? "Please wait..." : "Register"}
+        {isPending ? "Please wait..." : "Register"}
       </Button>
     </Form>
   );
