@@ -22,7 +22,7 @@ import {
 import { schema } from "~/lib/schemas/login";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  // If the user is already authenticated redirect to /dashboard directly
+  // If the user is already authenticated redirect to contacts directly
   return await authenticator.isAuthenticated(request, {
     successRedirect: "/",
   });
@@ -32,10 +32,12 @@ export default function Login() {
   const navigation = useNavigation();
   const lastResult = useActionData<typeof action>();
 
+  console.log("lastResult", lastResult);
+
   const isFormSubmitting = navigation.state === "submitting";
-  const isSigningInWithEmail =
+  const isLogingInWithEmail =
     isFormSubmitting && navigation.formAction !== "/auth/google";
-  const isSigningInWithGoogle =
+  const isLogingInWithGoogle =
     isFormSubmitting && navigation.formAction === "/auth/google";
 
   return (
@@ -53,9 +55,16 @@ export default function Login() {
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
         <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
+          <p
+            className={`text-sm text-red-500 ${
+              lastResult?.error?.email ? "" : "hidden"
+            }`}
+          >
+            {lastResult?.error?.email}
+          </p>
           <LoginForm
             lastResult={lastResult}
-            isSigningInWithEmail={isSigningInWithEmail}
+            isPending={isLogingInWithEmail}
           />
 
           <div>
@@ -79,16 +88,14 @@ export default function Login() {
                   type="submit"
                   variant="constructive"
                   icon={
-                    isSigningInWithGoogle
+                    isLogingInWithGoogle
                       ? "Lucide/refreshCcw"
                       : "GoogleMaterial/google"
                   }
                   className="mt-6 bg-transparent w-full justify-center"
-                  disabled={isSigningInWithGoogle}
+                  disabled={isLogingInWithGoogle}
                 >
-                  {isSigningInWithGoogle
-                    ? "Please wait..."
-                    : "Google"}
+                  {isLogingInWithGoogle ? "Please wait..." : "Google"}
                 </Button>
               </Form>
             </div>

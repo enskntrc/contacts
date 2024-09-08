@@ -15,10 +15,10 @@ import { Button } from "~/components/ui/button";
 import { schema } from "~/lib/schemas/login";
 
 export function LoginForm({
-  isSigningInWithEmail,
+  isPending,
   lastResult,
 }: {
-  isSigningInWithEmail: boolean;
+  isPending: boolean;
   lastResult: SubmissionResult<string[]> | undefined | null;
 }) {
   const id = useId();
@@ -62,13 +62,11 @@ export function LoginForm({
       <Button
         type="submit"
         variant="constructive"
-        icon={
-          isSigningInWithEmail ? "Lucide/refreshCcw" : "Lucide/check"
-        }
+        icon={isPending ? "Lucide/refreshCcw" : "Lucide/check"}
         className="mt-6 bg-transparent w-full justify-center"
-        disabled={isSigningInWithEmail}
+        disabled={isPending}
       >
-        {isSigningInWithEmail ? "Please wait..." : "Login"}
+        {isPending ? "Please wait..." : "Login"}
       </Button>
     </Form>
   );

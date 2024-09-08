@@ -1,15 +1,16 @@
 import bcrypt from "bcryptjs";
+import { eq } from "drizzle-orm";
 import { Authenticator } from "remix-auth";
 import { FormStrategy } from "remix-auth-form";
 import { GoogleStrategy } from "remix-auth-google";
 
-import { sessionStorage } from "./session.server";
-import { DB_NakedUser, users } from "db/schema/users";
-import { z } from "zod";
 import { db } from "db";
 import { generateId } from "~/lib/utils";
 import { passwords } from "db/schema/passwords";
-import { eq } from "drizzle-orm";
+import { sessionStorage } from "./session.server";
+import { type DB_NakedUser, users } from "db/schema/users";
+
+import { z } from "zod";
 
 const payloadSchema = z.object({
   name: z.string().optional(),
@@ -110,7 +111,7 @@ const googleStrategy = new GoogleStrategy(
           name: profile.displayName,
           is_google_signup: true,
         })
-        .where(eq(users.email, profile.emails[0].value))
+        .where(eq(users.email, user.email))
         .returning()
         .then((res) => res[0] ?? null);
     }
