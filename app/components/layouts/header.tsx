@@ -11,8 +11,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  // DropdownMenuLabel,
-  // DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -77,7 +75,6 @@ export function Header({
             name="q"
             type="search"
             value={query}
-            defaultValue={q || ""}
             onChange={(event) => setQuery(event.currentTarget.value)}
             placeholder="Search..."
             className="block h-full w-full border-0 py-0 pl-8 pr-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"
@@ -131,8 +128,6 @@ export function Header({
               </span>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in">
-              {/* <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator /> */}
               {navUser.map((item) => (
                 <DropdownMenuItem key={item.name}>
                   <Button

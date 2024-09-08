@@ -31,4 +31,7 @@ export default defineConfig({
     open: true,
     port: 3000,
   },
+  ssr: {
+    noExternal: ["react-dropzone"], // SSR için react-dropzone'u dışlama
+  },
 });

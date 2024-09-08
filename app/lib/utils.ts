@@ -15,6 +15,7 @@ const prefixes = {
   policy: "pol",
   request: "req",
   workspace: "ws",
+  img: "img",
   keyAuth: "key_auth", // <-- this is internal and does not need to be short or pretty
   vercelBinding: "vb",
   test: "test", // <-- for tests only
@@ -26,11 +27,11 @@ export function generateId(prefix: keyof typeof prefixes): string {
 
 export const generateRandomFileName = (originalFileName: string) => {
   const fileExtension = originalFileName.split(".").pop();
-  const randomString = generateId("key");
-  return `avatars/${randomString}.${fileExtension}`;
+  const randomString = generateId("img");
+  return `${randomString}.${fileExtension}`;
 };
 
-export function getS3ImageUrl(filename: string) {
+export function getS3ImageUrl(path: string) {
   const isSSR = typeof window === "undefined";
 
   const S3_ENDPOINT = isSSR
@@ -42,5 +43,5 @@ export function getS3ImageUrl(filename: string) {
     : window.ENV.S3_BUCKET_NAME;
 
   const baseURL = S3_ENDPOINT.replace(/\/s3$/, "");
-  return `${baseURL}/object/public/${S3_BUCKET_NAME}/${filename}`;
+  return `${baseURL}/object/public/${S3_BUCKET_NAME}/${path}`;
 }

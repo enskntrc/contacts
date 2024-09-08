@@ -1,8 +1,10 @@
 import { namedAction } from "remix-utils/named-action";
 import { getValidatedFormData } from "remix-hook-form";
-import { useEffect, useRef, useState } from "react";
-import { redirectWithError, redirectWithSuccess } from "remix-toast";
+import { FileWithPath, useDropzone } from "react-dropzone";
+import { useEffect, useRef, useState, useCallback } from "react";
+
 import { ActionFunctionArgs, json } from "@remix-run/node";
+import { redirectWithError, redirectWithSuccess } from "remix-toast";
 import {
   useFetcher,
   useParams,
@@ -10,40 +12,40 @@ import {
 } from "@remix-run/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { type ContactFormData, schema } from "~/lib/schemas/contact";
-
-import { ContactForm } from "~/components/forms/contact";
-import { NakedUser } from "~/components/types/user";
-import { Contact } from "~/components/types/contact";
-import { Icon } from "~/components/icons";
-import { Button } from "~/components/ui/button";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "~/components/ui/avatar";
-import { Input } from "~/components/ui/input";
+// import { Icon } from "~/components/icons";
+// import { Input } from "~/components/ui/input";
+// import { Button } from "~/components/ui/button";
+import { Contact } from "~/components/types/contact";
+import { NakedUser } from "~/components/types/user";
+import { ContactForm } from "~/components/forms/contact";
+import { ImageCropper } from "~/components/custom/image-cropper";
 
+import { uploadImage } from "~/lib/server/upload.server";
+// import { getS3ImageUrl } from "~/lib/utils";
 import { createContact } from "~/lib/server/create.server";
 import { updateContact } from "~/lib/server/update.server";
-import { uploadImage } from "~/lib/server/upload.server";
-import { getS3ImageUrl } from "~/lib/utils";
+import { type ContactFormData, schema } from "~/lib/schemas/contact";
 
 type RouteLoaderData = {
   user: NakedUser;
   contacts: Contact[];
 };
 
-type ActionData = {
-  message: string;
-  error?: { base64Content?: string };
-  success?: { url?: string; path?: string };
+export type FileWithPreview = FileWithPath & {
+  preview: string;
+};
+
+const accept = {
+  "image/*": [],
 };
 
 export default function EditContact() {
   const { id } = useParams();
-  const fetcher = useFetcher<ActionData>();
-  const inputRef = useRef<HTMLInputElement>(null);
 
   const routeLoaderData = useRouteLoaderData<RouteLoaderData>(
     "routes/_contacts+/_layout"
@@ -55,84 +57,62 @@ export default function EditContact() {
     (contact) => contact.id === id
   );
 
-  const [base64Image, setBase64Image] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] =
+    useState<FileWithPreview | null>(null);
+  const [isDialogOpen, setDialogOpen] = useState(false);
 
-  const allowedMimeTypes = ["image/jpeg", "image/png", "image/gif"];
+  console.log("selectedFile", selectedFile);
 
-  const handleFileChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      if (!allowedMimeTypes.includes(file.type)) {
-        alert(
-          "Unsupported file type. Please upload an image file (jpeg, png, gif)"
-        );
-        event.target.value = "";
+  const onDrop = useCallback(
+    (acceptedFiles: FileWithPath[]) => {
+      const file = acceptedFiles[0];
+      if (!file) {
+        alert("Selected image is too large!");
         return;
       }
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setBase64Image(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
-  useEffect(() => {
-    if (base64Image) {
-      fetcher.submit(
-        { base64Image },
-        { method: "post", action: "?/upload" }
-      );
-    }
-  }, [base64Image]);
+      const fileWithPreview = Object.assign(file, {
+        preview: URL.createObjectURL(file),
+      });
 
-  let currentImageUrl = contact?.img_path
-    ? getS3ImageUrl(contact?.img_path)
-    : "/profile.png";
-  if (fetcher.data?.success?.url) {
-    currentImageUrl = fetcher.data?.success?.url;
-  }
+      setSelectedFile(fileWithPreview);
+      setDialogOpen(true);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept,
+  });
 
   return (
     <div>
-      <div className="flex items-end">
-        <Avatar className="h-40 w-40">
-          {fetcher.state !== "idle" ? (
-            <div className="flex h-full w-full items-center justify-center rounded-full bg-muted">
-              <Icon name="Lucide/refreshCcw" className="h-5 w-5" />
-              <span className="truncate ml-3">Loading..</span>
-            </div>
-          ) : (
-            <AvatarImage src={currentImageUrl} alt="Uploaded" />
-          )}
-          <AvatarFallback>
-            <Icon name="Lucide/refreshCcw" className="h-5 w-5" />
-            <span className="truncate ml-3">Loading...</span>
-          </AvatarFallback>
-        </Avatar>
-        <Input
-          style={{ display: "none" }}
-          onChange={handleFileChange}
-          ref={inputRef}
-          type="file"
-          accept="image/*"
-        />
-        <Button
-          type="button"
-          icon="Lucide/circlePlus"
-          variant="constructive"
-          onClick={() => inputRef.current?.click()}
-          className="pr-1 mb-3"
-        />
+      <div className="relative ">
+        {selectedFile ? (
+          <ImageCropper
+            dialogOpen={isDialogOpen}
+            setDialogOpen={setDialogOpen}
+            selectedFile={selectedFile}
+            setSelectedFile={setSelectedFile}
+          />
+        ) : (
+          <Avatar
+            {...getRootProps()}
+            className="size-36 cursor-pointer ring-offset-2 ring-2 ring-slate-200"
+          >
+            <input {...getInputProps()} />
+            <AvatarImage src="profile.png" alt="@shadcn" />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+        )}
       </div>
 
       <ContactForm
         userId={routeLoaderData.user.id}
         contact={contact}
-        imgPath={fetcher.data?.success?.path || contact?.img_path}
-        imgUrl={fetcher.data?.success?.url || contact?.img_url}
+        imgPath={selectedFile?.path || contact?.img_path}
       />
     </div>
   );
