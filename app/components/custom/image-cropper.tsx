@@ -35,6 +35,8 @@ interface ImageCropperProps {
   setSelectedFile: React.Dispatch<
     React.SetStateAction<FileWithPreview | null>
   >;
+  croppedImage: string;
+  setCroppedImage: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export function ImageCropper({
@@ -42,6 +44,8 @@ export function ImageCropper({
   setDialogOpen,
   selectedFile,
   setSelectedFile,
+  croppedImage,
+  setCroppedImage,
 }: ImageCropperProps) {
   const aspect = 1;
 
@@ -50,7 +54,7 @@ export function ImageCropper({
   const [crop, setCrop] = React.useState<Crop>();
   const [croppedImageUrl, setCroppedImageUrl] =
     React.useState<string>("");
-  const [croppedImage, setCroppedImage] = React.useState<string>("");
+  // const [croppedImage, setCroppedImage] = React.useState<string>("");
 
   function onImageLoad(e: SyntheticEvent<HTMLImageElement>) {
     if (aspect) {

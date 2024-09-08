@@ -19,8 +19,7 @@ import { Action, ContactFormProps } from "../types/contact";
 export function ContactForm({
   userId,
   contact,
-  imgPath,
-  imgUrl,
+  base64Image,
 }: ContactFormProps) {
   const [action, setAction] = useState<Action>("?/create");
 
@@ -64,7 +63,7 @@ export function ContactForm({
       notes: contact?.notes ?? "",
     },
     submitConfig: { method: "post", action },
-    submitData: { userId, imgPath, imgUrl },
+    submitData: { userId, base64Image },
     resolver: zodResolver(schema),
   });
 

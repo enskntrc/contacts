@@ -6,16 +6,18 @@ import type { ContactFormData } from "../schemas/contact";
 
 export type CreateContactsProps = {
   userId: string;
+  data: ContactFormData;
   imgPath?: string;
   imgUrl?: string;
-  data: ContactFormData;
+  base64Image?: string;
 };
 
 export type UpdateContactsProps = {
   id: string;
+  data: ContactFormData;
   imgPath?: string;
   imgUrl?: string;
-  data: ContactFormData;
+  base64Image?: string;
 };
 
 export type GetContactsProps = {

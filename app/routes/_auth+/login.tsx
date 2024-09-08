@@ -32,8 +32,6 @@ export default function Login() {
   const navigation = useNavigation();
   const lastResult = useActionData<typeof action>();
 
-  console.log("lastResult", lastResult);
-
   const isFormSubmitting = navigation.state === "submitting";
   const isSigningInWithEmail =
     isFormSubmitting && navigation.formAction !== "/auth/google";

@@ -1,7 +1,7 @@
 import { namedAction } from "remix-utils/named-action";
 import { getValidatedFormData } from "remix-hook-form";
 import { FileWithPath, useDropzone } from "react-dropzone";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import { redirectWithError, redirectWithSuccess } from "remix-toast";
@@ -18,9 +18,11 @@ import { NakedUser } from "~/components/types/user";
 import { ContactForm } from "~/components/forms/contact";
 import { ImageCropper } from "~/components/custom/image-cropper";
 
-import { uploadImage } from "~/lib/server/upload.server";
-import { createContact } from "~/lib/server/create.server";
-import { updateContact } from "~/lib/server/update.server";
+import { createContactWithImage } from "~/lib/server/create.server";
+import {
+  updateContact,
+  updateContactWithImage,
+} from "~/lib/server/update.server";
 import { type ContactFormData, schema } from "~/lib/schemas/contact";
 
 type RouteLoaderData = {
@@ -51,9 +53,8 @@ export default function EditContact() {
 
   const [selectedFile, setSelectedFile] =
     useState<FileWithPreview | null>(null);
+  const [croppedImage, setCroppedImage] = useState<string>("");
   const [isDialogOpen, setDialogOpen] = useState(false);
-
-  console.log("selectedFile", selectedFile);
 
   const onDrop = useCallback(
     (acceptedFiles: FileWithPath[]) => {
@@ -88,6 +89,8 @@ export default function EditContact() {
             setDialogOpen={setDialogOpen}
             selectedFile={selectedFile}
             setSelectedFile={setSelectedFile}
+            croppedImage={croppedImage}
+            setCroppedImage={setCroppedImage}
           />
         ) : (
           <Avatar
@@ -104,7 +107,7 @@ export default function EditContact() {
       <ContactForm
         userId={routeLoaderData.user.id}
         contact={contact}
-        imgPath={selectedFile?.path || contact?.img_path}
+        base64Image={croppedImage}
       />
     </div>
   );
@@ -126,11 +129,10 @@ export const action = async ({
       );
       if (errors) return json({ errors, defaultValues });
 
-      const response = await createContact({
+      const response = await createContactWithImage({
         userId: defaultValues.userId,
-        imgPath: defaultValues.imgPath,
-        imgUrl: defaultValues.imgUrl,
         data,
+        base64Image: defaultValues.base64Image,
       });
 
       if (response.error) {
@@ -157,11 +159,10 @@ export const action = async ({
       );
       if (errors) return json({ errors, defaultValues });
 
-      const response = await updateContact({
+      const response = await updateContactWithImage({
         id: params.id as string,
-        imgPath: defaultValues.imgPath,
-        imgUrl: defaultValues.imgUrl,
         data,
+        base64Image: defaultValues.base64Image,
       });
 
       if (response.error) {
@@ -176,14 +177,6 @@ export const action = async ({
           }
         );
       }
-    },
-    async upload() {
-      const formData = await request.formData();
-      const base64Image = formData.get("base64Image") as string;
-
-      const response = await uploadImage(base64Image);
-
-      return json(response);
     },
   });
 };

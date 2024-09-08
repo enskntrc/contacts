@@ -48,8 +48,7 @@ export type Contact = {
 export type ContactFormProps = {
   userId: string;
   contact?: Contact;
-  imgPath?: string | null;
-  imgUrl?: string | null;
+  base64Image?: string | null;
 };
 
 export type Action = "?/create" | "?/update";

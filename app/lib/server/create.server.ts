@@ -8,6 +8,8 @@ import { uploadImage } from "./upload.server";
 export const createContact = async ({
   userId,
   data,
+  imgPath,
+  imgUrl,
 }: CreateContactsProps) => {
   try {
     const response = await db
@@ -16,6 +18,8 @@ export const createContact = async ({
         id: generateId("workspace"),
         status: "ACTIVE",
         user_id: userId,
+        img_path: imgPath,
+        img_url: imgUrl,
         ...data,
       })
       .returning()
@@ -43,37 +47,55 @@ export const createContact = async ({
 export const createContactWithImage = async ({
   userId,
   data,
-  imgPath,
+  base64Image,
 }: CreateContactsProps) => {
   try {
-    const responseCreateContact = await createContact({
-      userId,
-      data,
-    });
-    if (responseCreateContact.error) {
-      return {
-        error: responseCreateContact.error,
-        message: responseCreateContact.message,
-      };
-    }
-
-    if (imgPath) {
-      const responseUploadImage = await uploadImage(imgPath);
-      if (responseUploadImage.error) {
+    if (base64Image) {
+      const responseUploadImage = await uploadImage(base64Image);
+      if (!responseUploadImage.success) {
         return {
           error: responseUploadImage.error,
           message: responseUploadImage.message,
         };
       }
+      const responseCreateContact = await createContact({
+        userId,
+        data,
+        imgPath: responseUploadImage.success.path,
+        imgUrl: responseUploadImage.success.url,
+      });
+      if (responseCreateContact.error) {
+        return {
+          error: responseCreateContact.error,
+          message: responseCreateContact.message,
+        };
+      }
+      return {
+        success: {
+          createdContact: responseCreateContact.success,
+          uploadedImage: responseUploadImage.success,
+        },
+        message: responseCreateContact.message,
+      };
     }
 
+    const response = await createContact({
+      userId,
+      data,
+    });
+    if (response.error) {
+      return {
+        error: response.error,
+        message: response.message,
+      };
+    }
     return {
-      success: { createdContact: responseCreateContact.success },
-      message: responseCreateContact.message,
+      success: response.success,
+      message: response.message,
     };
   } catch (error: any) {
     return {
-      error: { createFormData: data },
+      error: { data, base64Image },
       message: error.message,
     };
   }
