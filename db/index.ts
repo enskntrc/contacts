@@ -1,5 +1,6 @@
 import { drizzle } from "drizzle-orm/libsql";
-import { createClient } from "libsql-stateless-easy";
+// import { createClient } from "libsql-stateless-easy";
+import { createClient } from "@libsql/client";
 
 import * as users from "./schema/users";
 import * as passwords from "./schema/passwords";

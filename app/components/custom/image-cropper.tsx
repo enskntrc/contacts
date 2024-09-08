@@ -1,5 +1,3 @@
-"use client";
-
 import React, { type SyntheticEvent } from "react";
 
 import ReactCrop, {
