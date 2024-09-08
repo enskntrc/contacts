@@ -1,15 +1,11 @@
 import { namedAction } from "remix-utils/named-action";
 import { getValidatedFormData } from "remix-hook-form";
 import { FileWithPath, useDropzone } from "react-dropzone";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 
 import { ActionFunctionArgs, json } from "@remix-run/node";
 import { redirectWithError, redirectWithSuccess } from "remix-toast";
-import {
-  useFetcher,
-  useParams,
-  useRouteLoaderData,
-} from "@remix-run/react";
+import { useParams, useRouteLoaderData } from "@remix-run/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
@@ -17,16 +13,12 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "~/components/ui/avatar";
-// import { Icon } from "~/components/icons";
-// import { Input } from "~/components/ui/input";
-// import { Button } from "~/components/ui/button";
 import { Contact } from "~/components/types/contact";
 import { NakedUser } from "~/components/types/user";
 import { ContactForm } from "~/components/forms/contact";
 import { ImageCropper } from "~/components/custom/image-cropper";
 
 import { uploadImage } from "~/lib/server/upload.server";
-// import { getS3ImageUrl } from "~/lib/utils";
 import { createContact } from "~/lib/server/create.server";
 import { updateContact } from "~/lib/server/update.server";
 import { type ContactFormData, schema } from "~/lib/schemas/contact";
